@@ -27,7 +27,7 @@
 '**********************************************
 
 Class Rabbit_Encryption_Algorithm
-	Private PLUGIN_CODE, PLUGIN_DB_NAME, PLUGIN_NAME, PLUGIN_VERSION, PLUGIN_CREDITS, PLUGIN_GIT, PLUGIN_DEV_URL, PLUGIN_FILES_ROOT, PLUGIN_ICON, PLUGIN_REMOVABLE, PLUGIN_ROOT, PLUGIN_FOLDER_NAME
+	Private PLUGIN_CODE, PLUGIN_DB_NAME, PLUGIN_NAME, PLUGIN_VERSION, PLUGIN_CREDITS, PLUGIN_GIT, PLUGIN_DEV_URL, PLUGIN_FILES_ROOT, PLUGIN_ICON, PLUGIN_REMOVABLE, PLUGIN_ROOT, PLUGIN_FOLDER_NAME, PLUGIN_AUTOLOAD
 	Private g_KeyLen, g_KeyLocation, g_DefaultKey, cryptkey, SavePathLocation, fileSaveState, LastSavedFileName
 
 	'---------------------------------------------------------------
@@ -71,8 +71,98 @@ Class Rabbit_Encryption_Algorithm
 		'--------------------------------------------------------
 		' Sub Page 
 		'--------------------------------------------------------
-		If Query.Data("Page") = "SHOW:CachedFiles" Then
+		If Query.Data("Page") = "SHOW:SampleCode" Then
 			Call PluginPage("Header")
+
+			SpecialWords    = "Bu gizli bir kelimedir, gizli olarak kalması gerekmektedir!"
+			SampleKey 		= "/[g-?#4Fd$-T/{\d3%%.@!specialLongKey$%&₺sW"
+			Key  			= SampleKey
+			MyKeyFileName 	= "mykey.txt"
+
+			With Response 
+				.Write "<div class=""row"">"
+				.Write "	<div class=""col-lg-6 col-12>"
+				.Write "		<h6>Code Syntax</h6>"
+				.Write "	</div>"
+				.Write "	<div class=""col-lg-6 col-12>"
+				.Write "		<h6>Sample Output</h6>"
+				.Write "		<style>td{width:33%; word-wrap:break-word;}</style>"
+				.Write "		<table class=""tabel table-sm table-bordered"">"
+				.Write "			<tr>"
+				.Write "				<td>Sample String</td>"
+				.Write "				<td></td>"
+				.Write "			</tr>"
+				.Write "			<tr>"
+				.Write "				<td colspan=""2""><small><strong>RESULT:</strong> "& SpecialWords &"</small></td>"
+				.Write "			</tr>"
+				.Write "			<tr>"
+				.Write "				<td>Let Key</td>"
+				.Write "				<td><code>Encryption.Key = """& SampleKey &"""</code></td>"
+				.Write "			</tr>"
+				.Write "			<tr>"
+				.Write "				<td colspan=""2""><small><strong>RESULT:</strong> </small></td>"
+				.Write "			</tr>"
+				.Write "			<tr>"
+				.Write "				<td>Default Key</td>"
+				.Write "				<td><code>Encryption.DefaultKey()</code></td>"
+				.Write "			</tr>"
+				.Write "			<tr>"
+				.Write "				<td colspan=""2""><small><strong>RESULT:</strong> "& SampleKey &"</small></td>"
+				.Write "			</tr>"
+				.Write "			<tr>"
+				.Write "				<td>Get Key</td>"
+				.Write "				<td><code>Encryption.Key()</code></td>"
+				.Write "			</tr>"
+				.Write "			<tr>"
+				.Write "				<td colspan=""2""><small><strong>RESULT:</strong> </small></td>"
+				.Write "			</tr>"
+				.Write "			<tr>"
+				.Write "				<td>Encrpyted</td>"
+				.Write "				<td><code>Encryption.Encrypt(SpecialWords)</code></td>"
+				.Write "			</tr>"
+				.Write "			<tr>"
+				.Write "				<td colspan=""2""><small><strong>RESULT:</strong> "& Encrypt(SpecialWords) &"</small></td>"
+				.Write "			</tr>"
+				.Write "			<tr>"
+				.Write "				<td>Decrypted</td>"
+				.Write "				<td><code>Encryption.Decrypt("""& Encrypt(SpecialWords) &""")</code></td>"
+				.Write "			</tr>"
+				.Write "			<tr>"
+				.Write "				<td colspan=""2""><small><strong>RESULT:</strong> "& Decrypt( Encrypt(SpecialWords) ) &"</small></td>"
+				.Write "			</tr>"
+				.Write "			<tr>"
+				.Write "				<td>Key Save Path</td>"
+				.Write "				<td><code>Encryption.KeySavePath()</code></td>"
+				.Write "			</tr>"
+				.Write "			<tr>"
+				.Write "				<td colspan=""2""><small><strong>RESULT:</strong> "& KeySavePath() &"</small></td>"
+				.Write "			</tr>"
+				.Write "			<tr>"
+				.Write "				<td>Save Key to File</td>"
+				.Write "				<td><code>Encryption.WriteKeyToFile("""& MyKeyFileName &""")</code></td>"
+				.Write "			</tr>"
+				.Write "			<tr>"
+				.Write "				<td colspan=""2""><small><strong>RESULT:</strong> "& WriteKeyToFile(MyKeyFileName) &"</small></td>"
+				.Write "			</tr>"
+				.Write "			<tr>"
+				.Write "				<td>Readed key from File?</td>"
+				.Write "				<td><code>Encryption.ReadKeyFromFile("""& MyKeyFileName &""")</code></td>"
+				.Write "			</tr>"
+				.Write "			<tr>"
+				.Write "				<td colspan=""2""><small><strong>RESULT:</strong> "& ReadKeyFromFile(MyKeyFileName) &"</small></td>"
+				.Write "			</tr>"
+				.Write "			<tr>"
+				.Write "				<td>Readed key from File? (Not Exist file)</td>"
+				.Write "				<td><code>Encryption.ReadKeyFromFile(""NotExistFile.txt"")</code></td>"
+				.Write "			</tr>"
+				.Write "			<tr>"
+				.Write "				<td colspan=""2""><small><strong>RESULT:</strong> "& ReadKeyFromFile("NotExistFile.txt") &"</small></td>"
+				.Write "			</tr>"
+				.Write "		</table>"
+				.Write "	</div>"
+				.Write "</div>"
+			End With
+
 
 			Call PluginPage("Footer")
 			Call SystemTeardown("destroy")
@@ -96,6 +186,13 @@ Class Rabbit_Encryption_Algorithm
 			' .Write 			QuickSettings("tag", ""& PLUGIN_CODE &"_OPTION_3", "Buraya Title", "", TO_DB)
 			' .Write "    </div>"
 			' .Write "</div>"
+			.Write "<div class=""row"">"
+			.Write "    <div class=""col-lg-12 col-sm-12"">"
+			.Write "        <a open-iframe href=""ajax.asp?Cmd=PluginSettings&PluginName="& PLUGIN_CODE &"&Page=SHOW:SampleCode"" class=""btn btn-sm btn-primary"">"
+			.Write "        	[DEV] Örnek Kullanım"
+			.Write "        </a>"
+			.Write "    </div>"
+			.Write "</div>"
 		End With
 	End Sub
 	'---------------------------------------------------------------
@@ -115,21 +212,21 @@ Class Rabbit_Encryption_Algorithm
     	PLUGIN_VERSION 			= "1.0.0"
     	PLUGIN_GIT 				= "https://github.com/RabbitCMS-Hub/Rabbit-Encryption-Algorithm"
     	PLUGIN_DEV_URL 			= "https://adjans.com.tr"
-    	PLUGIN_FILES_ROOT 		= PLUGIN_VIRTUAL_FOLDER(This)
     	PLUGIN_ICON 			= "zmdi-memory"
-    	PLUGIN_REMOVABLE 		= True
     	PLUGIN_CREDITS 			= "RC4 Encryption Using ASP & VBScript By @Mike Shaffer ReDeveloped by @badursun Anthony Burak DURSUN"
-    	PLUGIN_ROOT 			= PLUGIN_DIST_FOLDER_PATH(This)
     	PLUGIN_FOLDER_NAME 		= "Rabbit-Encryption-Algorithm"
-
     	PLUGIN_DB_NAME 			= ""
+    	PLUGIN_REMOVABLE 		= True
+    	PLUGIN_AUTOLOAD 		= True
+    	PLUGIN_ROOT 			= PLUGIN_DIST_FOLDER_PATH(This)
+    	PLUGIN_FILES_ROOT 		= PLUGIN_VIRTUAL_FOLDER(This)
     	'-------------------------------------------------------------------------------------
     	' PluginTemplate Main Variables
     	'-------------------------------------------------------------------------------------
 
 		fileSaveState 		= False
 		LastSavedFileName 	= ""
-		g_KeyLocation 		= "../keyFiles"
+		g_KeyLocation 		= PLUGIN_FILES_ROOT + "keyFiles/"
 		g_KeyLen 			= 512
 		g_DefaultKey 		= "GNQ?4i0-*\CldnU+[vrF1j1PcWeJfVv4QGBurFK6}*l[H1S:oY\v@U?i" &_
 							  ",oD]f/n8oFk6NesH--^PJeCLdp+(t8SVe:ewY(wR9p-CzG<,Q/(U*.pX" &_ 
@@ -144,6 +241,13 @@ Class Rabbit_Encryption_Algorithm
     	' PluginTemplate Register App
     	'-------------------------------------------------------------------------------------
     	class_register()
+
+    	'-------------------------------------------------------------------------------------
+    	' Hook Auto Load Plugin
+    	'-------------------------------------------------------------------------------------
+    	If PLUGIN_AUTOLOAD_AT("WEB") = True Then 
+
+    	End If
 	End Sub
 	'---------------------------------------------------------------
 	' Class First Init
@@ -176,9 +280,10 @@ Class Rabbit_Encryption_Algorithm
 	Public Property Get PluginRoot() 		: PluginRoot = PLUGIN_ROOT 					: End Property
 	Public Property Get PluginFolderName() 	: PluginFolderName = PLUGIN_FOLDER_NAME 	: End Property
 	Public Property Get PluginDBTable() 	: PluginDBTable = IIf(Len(PLUGIN_DB_NAME)>2, "tbl_plugin_"&PLUGIN_DB_NAME, "") 	: End Property
+	Public Property Get PluginAutoload() 	: PluginAutoload = PLUGIN_AUTOLOAD 			: End Property
 
 	Private Property Get This()
-		This = Array(PluginCode, PluginName, PluginVersion, PluginGit, PluginDevURL, PluginFolder, PluginIcon, PluginRemovable, PluginCredits, PluginRoot, PluginFolderName, PluginDBTable )
+		This = Array(PluginCode, PluginName, PluginVersion, PluginGit, PluginDevURL, PluginFolder, PluginIcon, PluginRemovable, PluginCredits, PluginRoot, PluginFolderName, PluginDBTable, PluginAutoload)
 	End Property
 	'---------------------------------------------------------------
 	' Plugin Defines
@@ -264,9 +369,20 @@ Class Rabbit_Encryption_Algorithm
 		LastSavedFileName = ""
 		On Error Resume Next
 
+		Dim PVFso, cPVFso
+	    Set PVFso = Server.CreateObject("Scripting.FileSystemObject")
+	        If PVFso.FolderExists(SavePathLocation) = False Then
+	            Set cPVFso = CreateObject("Scripting.FileSystemObject" )
+	                cPVFso.CreateFolder(SavePathLocation)
+	            Set cPVFso = Nothing
+
+	            Call PanelLog(""& PLUGIN_CODE &" Plugin için "& SavePathLocation &" klasörü oluşturuldu.", 0, ""& PLUGIN_CODE &"", 0)
+	        End If
+	    Set PVFso = Nothing
+
 		Dim keyFile, fso
 		set fso = Server.CreateObject("scripting.FileSystemObject") 
-		set keyFile = fso.CreateTextFile(SavePathLocation&"/"&strFileName, true) 
+		set keyFile = fso.CreateTextFile(SavePathLocation&"\"&strFileName, true) 
 			keyFile.WriteLine( cryptkey )
 			keyFile.Close
 		
@@ -293,7 +409,7 @@ Class Rabbit_Encryption_Algorithm
 		Dim keyFile, Fso, f
 		Set Fso = Server.CreateObject("Scripting.FileSystemObject") 
 		
-		tmpFileFullPath = SavePathLocation&"/"&strFileName
+		tmpFileFullPath = SavePathLocation&"\"&strFileName
 
 		If Not Fso.FileExists( tmpFileFullPath ) = True Then
 			ReadKeyFromFile = "File Not Found"
